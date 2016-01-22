@@ -1,0 +1,5 @@
+#Log file 
+
+# 22/01/2016
+  - app init started
+  - 
