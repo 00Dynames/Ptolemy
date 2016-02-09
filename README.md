@@ -23,3 +23,6 @@
   - currently working on migrating dataset-large users/posts into db
   - added large-dataset users into db
   - database populated with users and posts
+  - fiure out how to get posts in reversed order from query
+    - I can use all() to get a lins of the posts which are in order then reverse them but....
+    - user.html is showing posts in reverse chronological
