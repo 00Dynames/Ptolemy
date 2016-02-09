@@ -4,9 +4,9 @@ import os, glob, re, datetime
 from app import db, models
 
 def main():
-    extract_users()
+    extract_posts()
 
-def extract_users():
+def extract_users():  
     user_list = sorted(glob.glob("dataset-large/users/*"))
 
     for user_dir in user_list:
@@ -27,7 +27,7 @@ def extract_users():
 
         db.session.add(user)
         db.session.commit()
-        print user.username
+        #print user.username
 
 def extract_posts():
     post_list = sorted(glob.glob("dataset-large/bleats/*"))
@@ -43,18 +43,22 @@ def extract_posts():
                 post.body = re.sub("^bleat: |\n", "", line)
             elif re.search("^time: ", line):
                 time = float(re.sub("^time: |\n", "", line))
-                post.timestamp =  datetime.datetime.fromtimestamp(time).strftime("%c")
-                print datetime.datetime.fromtimestamp(time).strftime("%c")
+                post.timestamp = datetime.datetime.fromtimestamp(time)
+                #print datetime.datetime.fromtimestamp(time)
             elif re.search("^username: ", line):
-                print re.sub("^username: |\n", "", line)
+                username = re.sub("^username: |\n", "", line)
+                user_id = models.User.query.filter_by(username = username).first().id
+                post.user_id = user_id
+                #print re.sub("^username: |\n", "", line)
 
-        print post
-        print
+        #print post
+        #print
+
+        db.session.add(post)
+        db.session.commit()
 
 main()
 
 
-
-print
-print models.User.query.all() #filter_by(username = "john").first().id
-#print models.Post.query.all()
+#print models.User.query.all() #filter_by(username = "john").first().id
+print models.Post.query.all()

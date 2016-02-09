@@ -5,6 +5,9 @@ class User(db.Model):
     username = db.Column(db.String(64), index = True, unique = True)
     email = db.Column(db.String(64), index = True, unique = True)
     posts = db.relationship("Post", backref='author', lazy='dynamic')
+    password = db.Column(db.String(100), index = True)
+    full_name = db.Column(db.String(100), index = True)
+    
 
     def __repr__(self):
         return "<user %r>" % self.username
