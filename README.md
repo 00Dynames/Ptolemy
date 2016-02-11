@@ -26,3 +26,8 @@
   - fiure out how to get posts in reversed order from query
     - I can use all() to get a lins of the posts which are in order then reverse them but....
     - user.html is showing posts in reverse chronological
+
+- 11/02/2016
+  - adding in followers
+    - strange None error when filtering through users
+    - fixed: some users aren't following anyone

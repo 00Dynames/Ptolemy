@@ -17,10 +17,8 @@ def user(username):
     posts = user.posts.all()
     posts.reverse()
     
-    #posts = posts.reverse()
-
     if user == None:
         flash("nah m8")
         return redirect(url_for("index"))
 
-    return render_template("user.html", user = user, posts = posts)
+    return render_template("user.html", user = user, posts = posts, title = user.username)

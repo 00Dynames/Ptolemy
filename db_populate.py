@@ -4,7 +4,49 @@ import os, glob, re, datetime
 from app import db, models
 
 def main():
-    link_tags()
+    add_followers()
+
+def add_followers():
+    user_list = sorted(glob.glob("dataset-large/users/*"))
+
+    for user_dir in user_list:
+        username = re.sub("dataset-large/users/", "", user_dir)
+        user = models.User.query.filter_by(username = username).first()
+        following = open(os.path.join(user_dir, "details.txt"))
+        following = following.readlines()
+
+        has_following = False
+
+        for line in following:
+            if re.search("^listens: ", line):
+                following = re.sub("^listens: |\n", "", line)
+                following = following.split(" ")
+                has_following = True
+        
+        assert (type(following) == list)
+        
+        if has_following == False:
+            continue
+        
+        #print user.username
+
+        for followed in following:
+            new = models.User.query.filter_by(username = followed).first()
+            user.follow(new)
+            #print new.username, 
+        
+        db.session.add(user)
+        db.session.commit()
+        #print user.followed.all()
+
+        
+       
+
+
+
+
+
+
 
 def link_tags():
     posts = models.Post.query.all()
