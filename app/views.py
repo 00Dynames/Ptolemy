@@ -14,11 +14,14 @@ def index():
 def user(username):
 
     user = User.query.filter_by(username = username).first()
-    posts = user.posts.all()
-    posts.reverse()
+    posts = user.posts.all() + user.followed_posts().all()
+    posts = sorted(posts, key = get_key)
     
     if user == None:
         flash("nah m8")
         return redirect(url_for("index"))
 
     return render_template("user.html", user = user, posts = posts, title = user.username)
+
+def get_key(post):
+    return post.timestamp
