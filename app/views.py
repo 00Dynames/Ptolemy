@@ -1,6 +1,8 @@
-from app import app, db
-from flask import render_template, flash, redirect, url_for
+from app import app, db, login_manager
+from flask import render_template, flash, redirect, url_for, session, request, g
+from flask_login import login_user, logout_user, current_user, login_required
 from .models import User, Post
+from .forms import LoginForm
 
 @app.route("/")
 @app.route("/index")
@@ -18,6 +20,7 @@ def user(username):
     posts = sorted(posts, key = get_key)
     
     if user == None:
+        # write better "not found" page
         flash("nah m8")
         return redirect(url_for("index"))
 
@@ -25,3 +28,36 @@ def user(username):
 
 def get_key(post):
     return post.timestamp
+
+@app.route("/login", methods = ["GET", "POST"])
+def login():
+    form = LoginForm()
+
+    flash(g.user)
+
+    if form.validate_on_submit():
+        
+        #        
+        #login_user(user)
+        flash("logged in")
+        flash(str(form.username.raw_data))
+        #flash(user.username)
+        user = User.query.filter_by(username = str(form.username.raw_data[0])).first()
+
+        flash(user)
+        login_user(user)
+
+    return render_template("login.html", title = "Login", form = form)
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("index"))
+
+@login_manager.user_loader
+def load_user(id):
+    return User.query.get(int(id))
+
+@app.before_request
+def before_request():
+    g.user = current_user

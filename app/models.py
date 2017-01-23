@@ -6,6 +6,8 @@ followers = db.Table('followers',
 )
 
 class User(db.Model):
+
+    # Database schema
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(64), index = True, unique = True)
     email = db.Column(db.String(64), index = True, unique = True)
@@ -18,7 +20,26 @@ class User(db.Model):
                                secondaryjoin=(followers.c.followed_id == id), 
                                backref=db.backref('followers', lazy='dynamic'), 
                                lazy='dynamic')
-    
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_active(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return unicode(self.id)
+        except:
+            return str(self.id)
+
+
     def follow(self, user):
          if not self.is_following(user):
              self.followed.append(user)

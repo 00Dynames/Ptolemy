@@ -4,7 +4,24 @@
     </head>
     
     <body>
+        <div>Ptolemy 
+            - <a href="/index">Home</a>
+            - <a href="/login">Login</a>
+        </div>
+        <hr>
+
+        {% with messages = get_flashed_messages() %}
+              {% if messages %}
+                  <ul>
+                  {% for message in messages %}
+                      <li>{{ message }} </li>
+                  {% endfor %}
+                  </ul>
+              {% endif %}
+        {% endwith %}
+        
         {% block index %} {% endblock %}
         {% block user %} {% endblock %}
+        {% block login %} {% endblock %}
     </body>
 </html>
