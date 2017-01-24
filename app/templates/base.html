@@ -7,6 +7,12 @@
         <div>Ptolemy 
             - <a href="/index">Home</a>
             - <a href="/login">Login</a>
+
+            {% if g.user.is_authenticated %}
+            | {{g.user.username}}
+            - <a href="/logout">Logout</a>
+            {% endif %}
+
         </div>
         <hr>
 

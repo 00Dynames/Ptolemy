@@ -31,21 +31,16 @@ def get_key(post):
 
 @app.route("/login", methods = ["GET", "POST"])
 def login():
+    
     form = LoginForm()
-
-    flash(g.user)
-
     if form.validate_on_submit():
         
-        #        
-        #login_user(user)
-        flash("logged in")
-        flash(str(form.username.raw_data))
-        #flash(user.username)
-        user = User.query.filter_by(username = str(form.username.raw_data[0])).first()
-
-        flash(user)
-        login_user(user)
+        user = User.query.filter_by(username = str(form.username.raw_data[0])).first_or_404()
+        
+        if form.password.raw_data[0] == user.password:
+            login_user(user)
+        else:
+            flash("incorrect password")
 
     return render_template("login.html", title = "Login", form = form)
 
